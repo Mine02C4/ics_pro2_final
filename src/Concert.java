@@ -1,6 +1,8 @@
+import java.io.Serializable;
 import java.util.Date;
 
-public class Concert {
+public class Concert implements HasId, Serializable {
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name;
 	private int genreId;
