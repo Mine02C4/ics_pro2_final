@@ -1,9 +1,10 @@
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -100,11 +101,13 @@ class Tickets implements Serializable {
 abstract class Collection<T extends HasId> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private HashMap<Integer, T> elements = new HashMap<Integer, T>();
+	private PropertyChangeSupport changes = new PropertyChangeSupport(this);
 
 	protected void Add(T elem) throws IdConflictException {
 		if (elements.containsKey(elem.getId()))
 			throw new IdConflictException();
 		elements.put(elem.getId(), elem);
+		changes.firePropertyChange("elements", null, null);
 	}
 
 	public ArrayList<T> getsequentialCollection() {
@@ -113,6 +116,14 @@ abstract class Collection<T extends HasId> implements Serializable {
 			result.add(t);
 		}
 		return result;
+	}
+
+	public void addPropertyChangeListener(PropertyChangeListener l) {
+		changes.addPropertyChangeListener(l);
+	}
+
+	public void removePropertyChangeListener(PropertyChangeListener l) {
+		changes.removePropertyChangeListener(l);
 	}
 }
 

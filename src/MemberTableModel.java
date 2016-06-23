@@ -1,3 +1,5 @@
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
@@ -9,6 +11,17 @@ public class MemberTableModel extends AbstractTableModel {
 
 	public MemberTableModel() {
 		update();
+		DataHost.Single().members
+				.addPropertyChangeListener(new PropertyChangeListener() {
+
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						// TODO Auto-generated method stub
+						update();
+						fireTableDataChanged();
+					}
+
+				});
 	}
 
 	public void update() {
