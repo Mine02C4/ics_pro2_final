@@ -1,22 +1,20 @@
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.awt.event.ActionEvent;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
-public class AddConcertDialog extends JDialog {
+public class EditConcertDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField nameField;
@@ -31,12 +29,14 @@ public class AddConcertDialog extends JDialog {
 	private JLabel priceLabel;
 	private JLabel capacityLabel;
 	private JTextField capacityField;
+	private Concert concert;
 
 	/**
 	 * Create the dialog.
 	 */
-	public AddConcertDialog() {
-		setTitle("Add concert");
+	public EditConcertDialog(Concert con) {
+		concert = con;
+		setTitle("Edit concert");
 		setModal(true);
 		setBounds(100, 100, 400, 280);
 		getContentPane().setLayout(new BorderLayout());
@@ -51,7 +51,7 @@ public class AddConcertDialog extends JDialog {
 				0.0, Double.MIN_VALUE };
 		contentPanel.setLayout(gbl_contentPanel);
 		{
-			nameField = new JTextField();
+			nameField = new JTextField(concert.getName());
 			nameField.setColumns(10);
 		}
 		{
@@ -71,7 +71,7 @@ public class AddConcertDialog extends JDialog {
 		gbc_nameField.gridy = 0;
 		contentPanel.add(nameField, gbc_nameField);
 		{
-			genreField = new JTextField();
+			genreField = new JTextField(concert.getGenre());
 			genreField.setColumns(10);
 		}
 		{
@@ -101,7 +101,8 @@ public class AddConcertDialog extends JDialog {
 			contentPanel.add(startTimeLabel, gbc_startTimeLabel);
 		}
 		{
-			startTimeField = new JTextField();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+			startTimeField = new JTextField(sdf.format(concert.getStartTime()));
 			GridBagConstraints gbc_startTimeField = new GridBagConstraints();
 			gbc_startTimeField.fill = GridBagConstraints.HORIZONTAL;
 			gbc_startTimeField.insets = new Insets(0, 0, 5, 0);
@@ -121,7 +122,7 @@ public class AddConcertDialog extends JDialog {
 			contentPanel.add(siteLabel, gbc_siteLabel);
 		}
 		{
-			siteField = new JTextField();
+			siteField = new JTextField(concert.getSite());
 			GridBagConstraints gbc_siteField = new GridBagConstraints();
 			gbc_siteField.fill = GridBagConstraints.HORIZONTAL;
 			gbc_siteField.insets = new Insets(0, 0, 5, 0);
@@ -141,7 +142,7 @@ public class AddConcertDialog extends JDialog {
 			contentPanel.add(priceLabel, gbc_priceLabel);
 		}
 		{
-			priceField = new JTextField();
+			priceField = new JTextField(String.valueOf(concert.getPrice()));
 			GridBagConstraints gbc_priceField = new GridBagConstraints();
 			gbc_priceField.insets = new Insets(0, 0, 5, 0);
 			gbc_priceField.fill = GridBagConstraints.HORIZONTAL;
@@ -160,7 +161,7 @@ public class AddConcertDialog extends JDialog {
 			contentPanel.add(capacityLabel, gbc_capacityLabel);
 		}
 		{
-			capacityField = new JTextField();
+			capacityField = new JTextField(String.valueOf(concert.getCapacity()));
 			GridBagConstraints gbc_capacityField = new GridBagConstraints();
 			gbc_capacityField.fill = GridBagConstraints.HORIZONTAL;
 			gbc_capacityField.gridx = 1;
@@ -178,14 +179,14 @@ public class AddConcertDialog extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 
 						try {
-							String name = nameField.getText();
-							String genre = genreField.getText();
+							concert.setName(nameField.getText());
+							concert.setGenre(genreField.getText());
 							SimpleDateFormat sdf = new SimpleDateFormat();
-							Date startTime = sdf.parse(startTimeField.getText());
-							String site = siteField.getText();
-							int price = Integer.parseInt(priceField.getText());
-							int capacity = Integer.parseInt(capacityField.getText());
-							DataHost.Single().concerts.AddConcert(name, genre, startTime, site, price, capacity);
+							concert.setStartTime(sdf.parse(startTimeField.getText()));
+							concert.setSite(siteField.getText());
+							concert.setPrice(Integer.parseInt(priceField.getText()));
+							concert.setCapacity(Integer.parseInt(capacityField.getText()));
+							DataHost.Single().concerts.Update(concert);
 							dispose();
 						} catch (ParseException e1) {
 							e1.printStackTrace();

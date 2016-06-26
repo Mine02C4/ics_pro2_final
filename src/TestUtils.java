@@ -1,11 +1,6 @@
 import java.util.Calendar;
 
-public class EntryPoint {
-	public static void main(String[] args) {
-		InitializeTestData();
-		DataHost.Single().Save();
-	}
-
+public class TestUtils {
 	public static void InitializeTestData() {
 		DataHost.Single().members.AddMember("Takasaki");
 		DataHost.Single().members.AddMember("Kawasaki");

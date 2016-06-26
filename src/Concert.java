@@ -41,7 +41,7 @@ public class Concert implements HasId, Serializable {
 		return genre;
 	}
 
-	public void setGenreId(String genre) {
+	public void setGenre(String genre) {
 		this.genre = genre;
 	}
 
@@ -57,7 +57,7 @@ public class Concert implements HasId, Serializable {
 		return site;
 	}
 
-	public void setSiteId(String site) {
+	public void setSite(String site) {
 		this.site = site;
 	}
 

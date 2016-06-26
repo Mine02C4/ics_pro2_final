@@ -1,5 +1,6 @@
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.table.AbstractTableModel;
@@ -79,7 +80,8 @@ public class ConcertTableModel extends AbstractTableModel {
 		case 2:
 			return concert.getGenre();
 		case 3:
-			return concert.getStartTime().toString();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+			return sdf.format(concert.getStartTime());
 		case 4:
 			return concert.getSite();
 		case 5:

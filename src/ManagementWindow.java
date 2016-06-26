@@ -1,5 +1,3 @@
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import java.awt.GridLayout;
 import javax.swing.JScrollPane;
@@ -43,25 +41,9 @@ public class ManagementWindow {
 	private JLabel concertLabel;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new ManagementWindow();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the application.
 	 */
 	public ManagementWindow() {
-		// EntryPoint.InitializeTestData();
 		initialize();
 		frmMainwindow.setVisible(true);
 	}
@@ -214,6 +196,17 @@ public class ManagementWindow {
 		concertControlPanel.add(addConcertButton);
 
 		editConcertButton = new JButton("Edit concert");
+		editConcertButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int rowIndex = concertTable.getSelectedRow();
+				if (rowIndex >= 0) {
+					int concertId = concertTableModel.getIdFromRowIndex(rowIndex);
+					Concert concert = DataHost.Single().concerts.Get(concertId);
+					EditConcertDialog dialog = new EditConcertDialog(concert);
+					dialog.setVisible(true);
+				}
+			}
+		});
 		editConcertButton.setEnabled(false);
 		editConcertButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		concertControlPanel.add(editConcertButton);
