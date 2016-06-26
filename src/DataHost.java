@@ -110,6 +110,13 @@ abstract class Collection<T extends HasId> implements Serializable {
 		changes.firePropertyChange("elements", null, null);
 	}
 
+	protected void Delete(ArrayList<Integer> ids) {
+		for (Integer i : ids) {
+			elements.remove(i);
+		}
+		changes.firePropertyChange("elements", null, null);
+	}
+
 	public ArrayList<T> getsequentialCollection() {
 		ArrayList<T> result = new ArrayList<T>(elements.size());
 		for (T t : elements.values()) {

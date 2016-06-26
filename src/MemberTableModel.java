@@ -11,21 +11,21 @@ public class MemberTableModel extends AbstractTableModel {
 
 	public MemberTableModel() {
 		update();
-		DataHost.Single().members
-				.addPropertyChangeListener(new PropertyChangeListener() {
-
-					@Override
-					public void propertyChange(PropertyChangeEvent evt) {
-						// TODO Auto-generated method stub
-						update();
-						fireTableDataChanged();
-					}
-
-				});
+		DataHost.Single().members.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				update();
+				fireTableDataChanged();
+			}
+		});
 	}
 
-	public void update() {
+	private void update() {
 		sequentialMembers = DataHost.Single().members.getsequentialCollection();
+	}
+	
+	public int getIdFromRowIndex(int rowIndex) {
+		return sequentialMembers.get(rowIndex).getId();
 	}
 
 	@Override

@@ -4,15 +4,18 @@ import javax.swing.JFrame;
 import java.awt.GridLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+
 import java.awt.BorderLayout;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.BoxLayout;
 import java.awt.Component;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class ManagementWindow {
@@ -32,6 +35,7 @@ public class ManagementWindow {
 	private JButton addConcertButton;
 	private JButton editConcertButton;
 	private JButton deleteConcertButton;
+	private MemberTableModel memberTableModel;
 
 	/**
 	 * Launch the application.
@@ -72,11 +76,32 @@ public class ManagementWindow {
 		memberPanel.setLayout(new BorderLayout(0, 0));
 
 		memberScroll = new JScrollPane();
+		memberScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		memberPanel.add(memberScroll, BorderLayout.CENTER);
-		memberScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 
 		memberTable = new JTable();
-		memberTable.setModel(new MemberTableModel());
+		memberTableModel = new MemberTableModel();
+		memberTable.setModel(memberTableModel);
+		memberTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (e.getValueIsAdjusting()) {
+					return;
+				}
+				int count = memberTable.getSelectedRowCount();
+				if (count == 1) {
+					editMemberButton.setEnabled(true);
+				} else {
+					editMemberButton.setEnabled(false);
+				}
+				if (count > 0) {
+					deleteMemberButton.setEnabled(true);
+				} else {
+					deleteMemberButton.setEnabled(false);
+				}
+			}
+		});
 		memberScroll.setViewportView(memberTable);
 
 		memberControlPanel = new JPanel();
@@ -99,6 +124,20 @@ public class ManagementWindow {
 		memberControlPanel.add(editMemberButton);
 
 		deleteMemberButton = new JButton("Delete member");
+		deleteMemberButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (memberTable.getSelectedColumnCount() > 0) {
+					ArrayList<Integer> deleteMenberIdList = new ArrayList<Integer>();
+					ListSelectionModel lsm = memberTable.getSelectionModel();
+					for (int i = lsm.getMinSelectionIndex(); i <= lsm.getMaxSelectionIndex(); i++) {
+						if (lsm.isSelectedIndex(i)) {
+							deleteMenberIdList.add(memberTableModel.getIdFromRowIndex(i));
+						}
+					}
+					DataHost.Single().members.Delete(deleteMenberIdList);
+				}
+			}
+		});
 		deleteMemberButton.setEnabled(false);
 		deleteMemberButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		memberControlPanel.add(deleteMemberButton);
@@ -108,6 +147,7 @@ public class ManagementWindow {
 		concertPanel.setLayout(new BorderLayout(0, 0));
 
 		concertScroll = new JScrollPane();
+		concertScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		concertPanel.add(concertScroll, BorderLayout.CENTER);
 
 		concertTable = new JTable();
