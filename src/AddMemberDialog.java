@@ -16,19 +16,6 @@ public class AddMemberDialog extends JDialog {
 	private JTextField nameField;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			AddMemberDialog dialog = new AddMemberDialog();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Create the dialog.
 	 */
 	public AddMemberDialog() {

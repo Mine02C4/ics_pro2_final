@@ -17,6 +17,8 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 public class ManagementWindow {
 
@@ -36,6 +38,9 @@ public class ManagementWindow {
 	private JButton editConcertButton;
 	private JButton deleteConcertButton;
 	private MemberTableModel memberTableModel;
+	private ConcertTableModel concertTableModel;
+	private JLabel memberLabel;
+	private JLabel concertLabel;
 
 	/**
 	 * Launch the application.
@@ -142,16 +147,45 @@ public class ManagementWindow {
 		deleteMemberButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		memberControlPanel.add(deleteMemberButton);
 
+		memberLabel = new JLabel("Member management");
+		memberLabel.setFont(memberLabel.getFont().deriveFont(memberLabel.getFont().getStyle() | Font.BOLD, 15f));
+		memberPanel.add(memberLabel, BorderLayout.NORTH);
+
 		concertPanel = new JPanel();
 		frmMainwindow.getContentPane().add(concertPanel);
 		concertPanel.setLayout(new BorderLayout(0, 0));
+
+		concertLabel = new JLabel("Concert management");
+		concertLabel.setFont(concertLabel.getFont().deriveFont(concertLabel.getFont().getStyle() | Font.BOLD, 15f));
+		concertPanel.add(concertLabel, BorderLayout.NORTH);
 
 		concertScroll = new JScrollPane();
 		concertScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		concertPanel.add(concertScroll, BorderLayout.CENTER);
 
 		concertTable = new JTable();
-		concertTable.setModel(new ConcertTableModel());
+		concertTableModel = new ConcertTableModel();
+		concertTable.setModel(concertTableModel);
+		concertTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (e.getValueIsAdjusting()) {
+					return;
+				}
+				int count = concertTable.getSelectedRowCount();
+				if (count == 1) {
+					editConcertButton.setEnabled(true);
+				} else {
+					editConcertButton.setEnabled(false);
+				}
+				if (count > 0) {
+					deleteConcertButton.setEnabled(true);
+				} else {
+					deleteConcertButton.setEnabled(false);
+				}
+			}
+		});
 		concertScroll.setViewportView(concertTable);
 
 		concertControlPanel = new JPanel();
