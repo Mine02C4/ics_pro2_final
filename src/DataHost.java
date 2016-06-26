@@ -21,7 +21,6 @@ public class DataHost implements Serializable {
 
 	public static DataHost Single() {
 		if (!isInitialized) {
-			// TODO: Load data
 			try {
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dbFileName));
 				single = (DataHost) ois.readObject();

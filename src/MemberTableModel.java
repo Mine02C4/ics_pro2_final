@@ -8,8 +8,14 @@ public class MemberTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	private static final String[] columns = { "ID", "Name" };
 	private ArrayList<Member> sequentialMembers = null;
+	private Concert concert = null;
 
 	public MemberTableModel() {
+		this(null);
+	}
+
+	public MemberTableModel(Concert con) {
+		concert = con;
 		update();
 		DataHost.Single().members.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
@@ -21,9 +27,17 @@ public class MemberTableModel extends AbstractTableModel {
 	}
 
 	private void update() {
-		sequentialMembers = DataHost.Single().members.getsequentialCollection();
+		if (concert == null) {
+			sequentialMembers = DataHost.Single().members.getsequentialCollection();
+		} else {
+			ArrayList<Integer> members = DataHost.Single().tickets.GetMembersFromConcert(concert);
+			sequentialMembers = new ArrayList<Member>();
+			for (Integer i : members) {
+				sequentialMembers.add(DataHost.Single().members.Get(i));
+			}
+		}
 	}
-	
+
 	public int getIdFromRowIndex(int rowIndex) {
 		return sequentialMembers.get(rowIndex).getId();
 	}

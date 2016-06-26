@@ -39,6 +39,7 @@ public class ManagementWindow {
 	private ConcertTableModel concertTableModel;
 	private JLabel memberLabel;
 	private JLabel concertLabel;
+	private JButton detailButton;
 
 	/**
 	 * Create the application.
@@ -169,8 +170,10 @@ public class ManagementWindow {
 				int count = concertTable.getSelectedRowCount();
 				if (count == 1) {
 					editConcertButton.setEnabled(true);
+					detailButton.setEnabled(true);
 				} else {
 					editConcertButton.setEnabled(false);
+					detailButton.setEnabled(false);
 				}
 				if (count > 0) {
 					deleteConcertButton.setEnabled(true);
@@ -226,6 +229,22 @@ public class ManagementWindow {
 				}
 			}
 		});
+
+		detailButton = new JButton("Show detail");
+		detailButton.setEnabled(false);
+		detailButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int rowIndex = concertTable.getSelectedRow();
+				if (rowIndex >= 0) {
+					int concertId = concertTableModel.getIdFromRowIndex(rowIndex);
+					Concert concert = DataHost.Single().concerts.Get(concertId);
+					ShowDetailDialog dialog = new ShowDetailDialog(concert);
+					dialog.setVisible(true);
+				}
+			}
+		});
+		detailButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		concertControlPanel.add(detailButton);
 		deleteConcertButton.setEnabled(false);
 		deleteConcertButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		concertControlPanel.add(deleteConcertButton);
