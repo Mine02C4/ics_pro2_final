@@ -1,24 +1,20 @@
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Iterator;
+
 import javax.swing.table.AbstractTableModel;
 
-public class ConcertTableModel extends AbstractTableModel {
+public class TicketTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	private static final String[] columns = { "ID", "Name", "GenreID",
 			"StartTime", "SiteID", "Price", "Capacity" };
-	private ArrayList<Concert> sequentialConcerts = null;
-	private Member user = null;
+	private Member member;
+	ArrayList<Concert> concertList = new ArrayList<Concert>();
 
-	public ConcertTableModel() {
-		this(null);
-	}
-
-	public ConcertTableModel(Member member) {
-		user = member;
+	public TicketTableModel(Member member) {
+		this.member = member;
 		update();
-		DataHost.Single().concerts.addPropertyChangeListener(new PropertyChangeListener() {
+		DataHost.Single().tickets.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				update();
@@ -28,24 +24,15 @@ public class ConcertTableModel extends AbstractTableModel {
 	}
 
 	public void update() {
-		sequentialConcerts = DataHost.Single().concerts.getsequentialCollection();
-		if (user != null) {
-			ArrayList<Integer> concerts = DataHost.Single().tickets.GetConcertsFromMember(user);
-			Iterator<Concert> itr = sequentialConcerts.iterator();
-			while (itr.hasNext()) {
-				Concert concert = itr.next();
-				for (int id : concerts) {
-					if (id == concert.getId()) {
-						itr.remove();
-						break;
-					}
-				}
-			}
+		concertList.clear();
+		ArrayList<Integer> concerts = DataHost.Single().tickets.GetConcertsFromMember(member);
+		for (Integer id : concerts) {
+			concertList.add(DataHost.Single().concerts.Get(id));
 		}
 	}
-
+	
 	public int getIdFromRowIndex(int rowIndex) {
-		return sequentialConcerts.get(rowIndex).getId();
+		return concertList.get(rowIndex).getId();
 	}
 
 	@Override
@@ -59,7 +46,7 @@ public class ConcertTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return sequentialConcerts.size();
+		return concertList.size();
 	}
 
 	@Override
@@ -67,7 +54,7 @@ public class ConcertTableModel extends AbstractTableModel {
 		if ((rowIndex < 0) || getRowCount() < rowIndex - 1) {
 			return null;
 		}
-		Concert concert = sequentialConcerts.get(rowIndex);
+		Concert concert = concertList.get(rowIndex);
 
 		if (concert == null)
 			return null;

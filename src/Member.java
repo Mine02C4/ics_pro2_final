@@ -25,4 +25,8 @@ public class Member implements HasId, Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public String toString() {
+		return id + ": " + name;
+	}
 }

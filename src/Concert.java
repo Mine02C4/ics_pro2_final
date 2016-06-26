@@ -5,18 +5,20 @@ public class Concert implements HasId, Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name;
-	private int genreId;
+	private String genre;
 	private Date startTime;
-	private int siteId;
+	private String site;
 	private int price;
+	private int capacity;
 
-	public Concert(int id, String name, int genreId, Date startTime, int siteId, int price) {
-		this.setId(id);
-		this.setName(name);
-		this.setGenreId(genreId);
-		this.setStartTime(startTime);
-		this.setSiteId(siteId);
-		this.setPrice(price);
+	public Concert(int id, String name, String genre, Date startTime, String site, int price, int capacity) {
+		this.id = id;
+		this.name = name;
+		this.genre = genre;
+		this.startTime = startTime;
+		this.site = site;
+		this.price = price;
+		this.capacity = capacity;
 	}
 
 	public int getId() {
@@ -35,12 +37,12 @@ public class Concert implements HasId, Serializable {
 		this.name = name;
 	}
 
-	public int getGenreId() {
-		return genreId;
+	public String getGenre() {
+		return genre;
 	}
 
-	public void setGenreId(int genreId) {
-		this.genreId = genreId;
+	public void setGenreId(String genre) {
+		this.genre = genre;
 	}
 
 	public Date getStartTime() {
@@ -51,12 +53,12 @@ public class Concert implements HasId, Serializable {
 		this.startTime = startTime;
 	}
 
-	public int getSiteId() {
-		return siteId;
+	public String getSite() {
+		return site;
 	}
 
-	public void setSiteId(int siteId) {
-		this.siteId = siteId;
+	public void setSiteId(String site) {
+		this.site = site;
 	}
 
 	public int getPrice() {
@@ -65,5 +67,13 @@ public class Concert implements HasId, Serializable {
 
 	public void setPrice(int price) {
 		this.price = price;
+	}
+
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
 	}
 }

@@ -49,8 +49,7 @@ public class ManagementWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ManagementWindow window = new ManagementWindow();
-					window.frmMainwindow.setVisible(true);
+					new ManagementWindow();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -62,8 +61,9 @@ public class ManagementWindow {
 	 * Create the application.
 	 */
 	public ManagementWindow() {
-		EntryPoint.InitializeTestData();
+		// EntryPoint.InitializeTestData();
 		initialize();
+		frmMainwindow.setVisible(true);
 	}
 
 	/**
@@ -124,6 +124,17 @@ public class ManagementWindow {
 		memberControlPanel.add(addMemberButton);
 
 		editMemberButton = new JButton("Edit member");
+		editMemberButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int rowIndex = memberTable.getSelectedRow();
+				if (rowIndex >= 0) {
+					int memberId = memberTableModel.getIdFromRowIndex(rowIndex);
+					Member member = DataHost.Single().members.Get(memberId);
+					EditMemberDialog dialog = new EditMemberDialog(member);
+					dialog.setVisible(true);
+				}
+			}
+		});
 		editMemberButton.setEnabled(false);
 		editMemberButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		memberControlPanel.add(editMemberButton);
@@ -193,6 +204,12 @@ public class ManagementWindow {
 		concertControlPanel.setLayout(new BoxLayout(concertControlPanel, BoxLayout.Y_AXIS));
 
 		addConcertButton = new JButton("Add concert");
+		addConcertButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AddConcertDialog dialog = new AddConcertDialog();
+				dialog.setVisible(true);
+			}
+		});
 		addConcertButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		concertControlPanel.add(addConcertButton);
 
@@ -202,6 +219,20 @@ public class ManagementWindow {
 		concertControlPanel.add(editConcertButton);
 
 		deleteConcertButton = new JButton("Delete concert");
+		deleteConcertButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (concertTable.getSelectedColumnCount() > 0) {
+					ArrayList<Integer> deleteConcertIdList = new ArrayList<Integer>();
+					ListSelectionModel lsm = concertTable.getSelectionModel();
+					for (int i = lsm.getMinSelectionIndex(); i <= lsm.getMaxSelectionIndex(); i++) {
+						if (lsm.isSelectedIndex(i)) {
+							deleteConcertIdList.add(concertTableModel.getIdFromRowIndex(i));
+						}
+					}
+					DataHost.Single().concerts.Delete(deleteConcertIdList);
+				}
+			}
+		});
 		deleteConcertButton.setEnabled(false);
 		deleteConcertButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		concertControlPanel.add(deleteConcertButton);
