@@ -24,7 +24,7 @@ public class ShowDetailDialog extends JDialog {
 	public ShowDetailDialog(Concert con) {
 		concert = con;
 		setTitle("Concert detail");
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 600, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
